@@ -31,9 +31,10 @@ export class DojoClient {
         try {
           // @ts-ignore - optional dependency
           const mod = await import('@dojoengine/torii-client');
-          const ToriiClient = mod && (mod.ToriiClient || mod.default || mod);
+          // Use Client from the new torii-client API
+          const ToriiClient = (mod as any).Client || (mod as any).default || mod;
           if (ToriiClient) {
-            this.toriiClient = new ToriiClient({ baseUrl: (config as any).toriiUrl });
+            this.toriiClient = ToriiClient;
           }
         } catch (e) {
           // ignore - torii client not available in this environment
