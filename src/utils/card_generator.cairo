@@ -1,8 +1,26 @@
 use memorabilia::models::card::{Card, CardTrait};
 use memorabilia::utils::random::{Random, RandomTrait};
+use starknet::get_block_hash;
 
-// Generate shuffled card pairs based on difficulty
-pub fn generate_card_deck(difficulty: u8, seed: felt252) -> Array<Card> {
+// Enhanced seed generation with multiple entropy sources
+fn generate_enhanced_seed(timestamp: u64, player_data: felt252) -> felt252 {
+    let block_hash = get_block_hash(0).unwrap();
+    let hash_span = array![
+        timestamp.into(),
+        player_data,
+        block_hash.into(),
+        'MEMORABILIA_ENTROPY'
+    ].span();
+    
+    poseidon_hash_span(hash_span)
+}
+
+// Generate shuffled card pairs based on difficulty with enhanced randomness
+pub fn generate_card_deck(
+    difficulty: u8, 
+    timestamp: u64,
+    player_data: felt252
+) -> Array<Card> {
     let total_pairs: u8 = match difficulty {
         1 => 4,   // Easy: 8 cards (4 pairs)
         2 => 8,   // Medium: 16 cards (8 pairs)
@@ -168,5 +186,12 @@ mod tests {
         // Each value should appear exactly twice
         assert(value_0_count == 2, 'Should have 2 of each value');
     }
+}
+
+mod models {
+    mod game_state;
+    mod card;
+    mod player_limits;
+    mod game_cards;
 }
 
