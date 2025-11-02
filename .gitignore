@@ -1,0 +1,45 @@
+# Dojo / Scarb
+target/
+Scarb.lock
+manifests/
+
+# Build artifacts
+*.sierra.json
+*.casm.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+
+# Node (if using frontend)
+node_modules/
+dist/
+.next/
+build/
+
+# Python (if using scripts)
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+
+# Temporary files
+*.tmp
+*.bak
+*.cache
+

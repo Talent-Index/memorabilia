@@ -1,0 +1,35 @@
+[env]
+# Development environment configuration for Memorabilia
+
+# Katana (Local Development)
+rpc_url = "http://localhost:5050/"
+
+# Default account for local development
+# These are Katana's default pre-funded accounts
+account_address = "0x517ececd29116499f4a1b64b094da79ba08dfd54a3edaa316134c41f8160973"
+private_key = "0x1800000000300000180000000000030000000000003006001800006600"
+
+# World address (will be set after first deployment)
+world_address = "0x0"
+
+[game]
+# Game configuration
+default_difficulty = 2  # Medium
+max_game_duration = 3600  # 1 hour in seconds
+session_duration = 86400  # 24 hours in seconds
+
+[leaderboard]
+# Leaderboard configuration
+max_entries = 100
+min_score_threshold = 5000
+
+[session]
+# Session key configuration
+max_fee = "1000000000000000"  # 0.001 ETH in wei
+allowed_methods = [
+    "start_game",
+    "flip_card",
+    "check_match",
+    "set_greeting"
+]
+
