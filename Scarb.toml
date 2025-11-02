@@ -23,3 +23,9 @@ initializer_class_hash = "0xbeef"
 [profile.release.tool.dojo]
 initializer_class_hash = "0xbeef"
 
+[profile.sepolia.tool.dojo]
+rpc_url = "https://starknet-sepolia.public.blastapi.io"
+account_address = "" # Add your Sepolia account address here
+private_key = "" # Add your Sepolia private key here
+world_address = "" # Will be set after deployment
+
