@@ -1,15 +1,17 @@
-# Dojo Telegram SDK (prototype)
+# Dojo-Telegram SDK (prototype)
 
-This folder contains a minimal prototype for a Dojo <-> Telegram SDK used in the Memorabilia sprint.
+Minimal SDK prototype for integrating Telegram Mini Apps with a Dojo World on StarkNet.
 
-What it includes
-- `src/auth.ts` — simple initData parsing helper (prototype only).
-- `src/dojoClient.ts` — thin wrapper that calls world entrypoints via a provided Account.
+Quick start:
+1. Install deps:
+   npm ci
 
-How to use
-1. Install TypeScript dev dep: `npm ci` in the sdk folder.
-2. Build: `npm run build`.
-3. Use the `DojoClient` wrapper with a live Account instance from your frontend runtime (create-burner or Account provider).
+2. Build:
+   npm run build
 
-Notes
-- This is a prototype scaffold. For production, add full initData validation (server-side), proper CallData encoding, and error handling.
+3. Run tests:
+   npm test
+
+Notes:
+- Tests run in Node and mock starknet Account/provider; production code must encode calldata per contract ABI.
+- Auth uses Telegram login verification algorithm (HMAC-SHA256 with secret=SHA256(bot_token)).

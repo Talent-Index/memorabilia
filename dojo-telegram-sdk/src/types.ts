@@ -1,3 +1,12 @@
+export interface TelegramAuth {
+  id: number;
+  first_name: string;
+  username?: string;
+  photo_url?: string;
+  auth_date: number;
+  hash: string;
+}
+
 export interface TelegramUser {
   id: number;
   first_name?: string;
@@ -13,6 +22,12 @@ export interface SDKConfig {
   network?: 'katana' | 'sepolia' | 'mainnet';
 }
 
+export interface DojoConfig {
+  worldAddress: string;
+  rpcUrl: string;
+  toriiUrl?: string;
+}
+
 // Minimal Account interface for the prototype
 export interface Account {
   address?: string;
@@ -23,4 +38,19 @@ export interface Account {
 export interface TxReceipt {
   transaction_hash?: string;
   events?: any[];
+}
+
+export interface GameState {
+  gameId: number;
+  status: 'active' | 'completed' | 'abandoned';
+  score: number;
+  moves: number;
+  cards: Card[];
+}
+
+export interface Card {
+  index: number;
+  value: number;
+  isFlipped: boolean;
+  isMatched: boolean;
 }
