@@ -171,6 +171,47 @@ sozo --profile sepolia execute game_system start_game --calldata 1
 ```bash
 torii --world 0xYOUR_SEPOLIA_WORLD_ADDRESS \
       --rpc https://starknet-sepolia.public.blastapi.io
+
+## Cartridge Controller (optional but recommended)
+
+If your Game Jam or Dojo pattern requires using a Cartridge Controller (a system that manages cartridges or modules registered to the world), follow these steps.
+
+1. Add a Cartridge Controller system to `src/systems/` (a stub `cartridge_controller.cairo` is included in this repo).
+2. Export/register the system in your world initializer so it's included when running `sozo migrate apply`.
+3. Implement entrypoints such as `register_cartridge`, `remove_cartridge`, and `list_cartridges` inside `src/systems/cartridge_controller.cairo`.
+4. Redeploy using the same migration flow.
+
+Example (high level):
+
+```bash
+# After implementing the controller and adding it to your initializer
+sozo build
+sozo test
+sozo --profile sepolia migrate apply
+```
+
+Note: exact APIs for cartridge management depend on your design. The stub in `src/systems/cartridge_controller.cairo` documents expected entrypoints and is a starting point.
+
+## Deploying to Dojo Slot (example)
+
+If you need to deploy to a Dojo-managed Slot environment rather than Sepolia, obtain the Slot RPC URL and credentials from Dojo first. A sample profile file `dojo_slot_example.toml` is included; copy it to `dojo_slot.toml` and replace the placeholders.
+
+Then run:
+
+```bash
+# Use the named profile to migrate to Slot
+sozo --profile slot migrate apply
+```
+
+Or, if the Slot provider requires a direct RPC URL, you can run:
+
+```bash
+export STARKNET_RPC_URL="https://<DOJO_SLOT_RPC_URL>"
+sozo migrate apply --rpc-url $STARKNET_RPC_URL
+```
+
+If the Slot environment requires additional authentication or a different `sozo` configuration, follow the provider instructions and add the required profile to your Scarb/dojo configs.
+
 ```
 
 ## Phase 4: Frontend Deployment

@@ -16,6 +16,8 @@ mod systems {
     mod game_system;
     mod greeting_system;
     mod leaderboard_system;
+    // Cartridge Controller: manage cartridges (stub added)
+    mod cartridge_controller;
 }
 
 // Utilities

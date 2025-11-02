@@ -8,18 +8,10 @@ export default function GameBoard() {
   const { currentGame, flippedCards, flipCard, isChecking } = useGameStore();
   const [elapsedTime, setElapsedTime] = useState(0);
   const [showPreview, setShowPreview] = useState(true);
-  const [gameEmojis, setGameEmojis] = useState<string[]>([]);
 
-  // Initialize game emojis when game starts
+  // Show preview when game starts
   useEffect(() => {
     if (!currentGame) return;
-
-    const config = GAME_CONFIGS[currentGame.difficulty];
-
-    // Select random emojis for this game
-    const shuffled = [...CARD_EMOJIS].sort(() => Math.random() - 0.5);
-    const selected = shuffled.slice(0, config.pairCount);
-    setGameEmojis(selected);
 
     // Show preview for 1.5 seconds
     setShowPreview(true);
@@ -106,7 +98,8 @@ export default function GameBoard() {
           const isMatched = card.is_matched;
           // Card is flipped if: preview mode, currently flipped, or matched
           const isFlipped = showPreview || flippedCards.includes(index) || isMatched;
-          const emoji = gameEmojis[card.value] || CARD_EMOJIS[card.value];
+          // Use emojis from game state (demo mode) or fallback to CARD_EMOJIS
+          const emoji = currentGame.emojis?.[card.value] || CARD_EMOJIS[card.value];
 
           return (
             <Card

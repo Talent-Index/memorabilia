@@ -24,6 +24,7 @@ export interface GameState {
   player: string;
   difficulty: Difficulty;
   cards: Card[];
+  emojis?: string[]; // Emojis for this game (demo mode)
   flipped_indices: number[];
   matched_count: number;
   total_pairs: number;

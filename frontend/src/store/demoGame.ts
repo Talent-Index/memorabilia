@@ -49,12 +49,16 @@ export function generateDemoCards(difficulty: Difficulty): Card[] {
 export function createDemoGame(difficulty: Difficulty): GameState {
   const cards = generateDemoCards(difficulty);
   const totalPairs = difficulty === Difficulty.Easy ? 4 : difficulty === Difficulty.Medium ? 8 : 12;
-  
+
+  // Select random emojis for this game
+  const selectedEmojis = shuffleArray(CARD_EMOJIS).slice(0, totalPairs);
+
   return {
     game_id: Math.floor(Math.random() * 1000000),
     player: 'demo_player',
     difficulty,
     cards,
+    emojis: selectedEmojis, // Store emojis with game state
     flipped_indices: [],
     matched_count: 0,
     total_pairs: totalPairs,

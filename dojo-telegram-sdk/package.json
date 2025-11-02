@@ -14,5 +14,8 @@
   "devDependencies": {
     "typescript": "^5.0.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@dojoengine/create-burner": "^0.1.0",
+    "@dojoengine/torii-client": "^0.1.0"
+  }
 }

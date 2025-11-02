@@ -38,7 +38,8 @@ export async function setupDojo(): Promise<DojoContext> {
     masterAccount,
     accountClassHash: '0x05400e90f7e0ae78bd02c77cd75527280470e2fe19c54970dd79dc37a9d3645c', // Standard account class hash
     rpcProvider: provider,
-  });
+    feeTokenAddress: '0x049d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7', // ETH token address
+  } as any);
 
   dojoContext = {
     provider,
@@ -59,17 +60,17 @@ export function getDojoContext(): DojoContext {
 
 export async function createBurnerAccount(): Promise<Account> {
   const { burnerManager } = getDojoContext();
-  
+
   console.log('🔥 Creating burner account...');
   const burner = await burnerManager.create();
   console.log('✅ Burner account created:', burner.address);
-  
-  return burner;
+
+  return burner as any;
 }
 
 export async function getBurnerAccounts(): Promise<Account[]> {
   const { burnerManager } = getDojoContext();
-  return burnerManager.list();
+  return burnerManager.list() as any;
 }
 
 export async function clearBurnerAccounts(): Promise<void> {

@@ -1,0 +1,15 @@
+[env]
+# Example profile for deploying to a Dojo-managed "Slot" environment.
+# Replace the placeholders with the real Slot RPC and account credentials
+# provided by the Dojo Slot service (if applicable).
+
+rpc_url = "https://<DOJO_SLOT_RPC_URL>"
+account_address = "0x<YOUR_ACCOUNT_ADDRESS>"
+private_key = "0x<YOUR_PRIVATE_KEY>"
+world_address = ""
+
+[profile.slot]
+rpc_url = "https://<DOJO_SLOT_RPC_URL>"
+
+# Usage:
+# sozo --profile slot migrate apply

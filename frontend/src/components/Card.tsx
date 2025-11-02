@@ -87,7 +87,7 @@ export default function Card({ emoji, isFlipped, isMatched, onClick, disabled }:
 
               {/* Emoji */}
               <motion.div
-                className="text-5xl sm:text-6xl md:text-7xl filter drop-shadow-md z-10"
+                className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl filter drop-shadow-md z-10"
                 initial={false}
                 animate={isMatched ? {
                   scale: [1, 1.3, 1],

@@ -11,17 +11,32 @@ if ! command -v sozo >/dev/null 2>&1; then
   exit 1
 fi
 
+DEMO_ONLY=false
+if [ "$1" = "--demo" ] || [ "$1" = "demo" ]; then
+  DEMO_ONLY=true
+fi
+
 echo "2) Start Katana in background (open a dedicated terminal is recommended)"
 echo "Run: katana --disable-fee --allowed-origins '*'"
 
-echo "3) Deploy contracts"
-sozo migrate apply || { echo "Migration failed"; exit 1; }
+if [ "$DEMO_ONLY" = false ]; then
+  echo "3) Deploy contracts"
+  sozo migrate apply || { echo "Migration failed"; echo "You can run the script with --demo to skip blockchain deploy."; exit 1; }
 
-echo "4) Start Torii (replace WORLD_ADDRESS as printed by migration)"
-echo "Run: torii --world 0x<WORLD_ADDRESS> --rpc http://localhost:5050 --allowed-origins '*'"
+  echo "4) Start Torii (replace WORLD_ADDRESS as printed by migration)"
+  echo "Run: torii --world 0x<WORLD_ADDRESS> --rpc http://localhost:5050 --allowed-origins '*'"
+else
+  echo "Skipping contract deploy & Torii: running in DEMO mode"
+fi
 
 echo "5) Start frontend"
 cd frontend || exit 1
 npm ci
-echo "Edit frontend/.env with VITE_WORLD_ADDRESS and VITE_RPC_URL before running dev server if needed"
+if [ "$DEMO_ONLY" = true ]; then
+  echo "Running frontend in DEMO MODE (no VITE_WORLD_ADDRESS required)."
+  # Remove or unset world address to force demo mode
+  cp .env.example .env.local 2>/dev/null || true
+  sed -i "s/^VITE_WORLD_ADDRESS=.*$/VITE_WORLD_ADDRESS=/" .env.local || true
+fi
+echo "Edit frontend/.env(.local) with VITE_WORLD_ADDRESS and VITE_RPC_URL if needed"
 npm run dev

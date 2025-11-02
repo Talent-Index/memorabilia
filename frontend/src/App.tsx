@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useGameStore } from './store/gameStore';
 import { setupDojo, createBurnerAccount } from './dojo/setup';
 import { createGameController } from './dojo/gameController';
-import { initTelegramApp, getTelegramUser, getThemeColors } from './telegram/telegram';
+import { initTelegramApp, getTelegramUser, getThemeColors, isTelegramWebApp } from './telegram/telegram';
 
 // Components
 import LoadingScreen from './components/LoadingScreen';
@@ -11,6 +11,7 @@ import GameBoard from './components/GameBoard';
 import WinModal from './components/WinModal';
 import Header from './components/Header';
 import Leaderboard from './components/Leaderboard';
+import TelegramRequired from './components/TelegramRequired';
 
 type Screen = 'loading' | 'difficulty' | 'game' | 'leaderboard';
 
@@ -114,32 +115,40 @@ function App() {
     }
   };
 
+  // Check if running in Telegram
+  const isInTelegram = isTelegramWebApp();
+
+  // Show Telegram required screen if not in Telegram
+  if (!isInTelegram) {
+    return <TelegramRequired />;
+  }
+
   if (isInitializing) {
     return <LoadingScreen />;
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 text-white">
-      <Header 
+      <Header
         onShowLeaderboard={handleShowLeaderboard}
         onBackToDifficulty={handleBackToDifficulty}
         currentScreen={screen}
       />
-      
+
       <main className="container mx-auto px-4 py-8">
         {screen === 'difficulty' && (
           <DifficultySelector onStart={() => setScreen('game')} />
         )}
-        
+
         {screen === 'game' && currentGame && (
           <GameBoard />
         )}
-        
+
         {screen === 'leaderboard' && (
           <Leaderboard onBack={handleBackToDifficulty} />
         )}
       </main>
-      
+
       {showWinModal && (
         <WinModal onClose={handleWinModalClose} />
       )}
