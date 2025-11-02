@@ -82,12 +82,23 @@ mod game_system {
             // Validate difficulty
             assert(difficulty >= 1 && difficulty <= 3, 'Invalid difficulty');
             
-            // Generate unique game_id
+            // Check rate limits
+            let mut player_limits = get!(world, caller, PlayerLimits);
+            assert(player_limits.can_start_game(timestamp), 'Rate limit exceeded');
+            
+            // Update player limits
+            player_limits.update_limits(timestamp);
+            set!(world, (player_limits));
+            
+            // Generate unique game_id with enhanced entropy
             let game_id = generate_game_id(caller, timestamp);
             
-            // Generate card deck
-            let seed = timestamp.into();
-            let cards = generate_card_deck(difficulty, seed);
+            // Generate card deck with enhanced randomness
+            let cards = generate_card_deck(
+                difficulty,
+                timestamp,
+                caller.into()
+            );
             
             // Create game state
             let game_state = GameStateTrait::new(
