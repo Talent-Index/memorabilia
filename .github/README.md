@@ -2,6 +2,9 @@
 
 ## Submission Track
 Full Game
+Dojo telegram SDK	SDK	A fully on-chain memory card matching game built on Starknet using the Dojo framework, integrated with Telegram Mini Apps for seamless user experience through Account Abstraction.			
+Team 3/ Memorabilia 
+Link	https://github.com/Talent-Index/memorabilia																			
 
 ## Project Summary
 A fully on-chain memory card matching game built on Starknet using the Dojo framework, integrated with Telegram Mini Apps for seamless user experience through Account Abstraction. The game features a custom Dojo Telegram SDK that enables gasless transactions and real-time game state updates.
