@@ -1,22 +1,47 @@
 use starknet::ContractAddress;
-use memorabilia::models::card::Card;
 
 #[derive(Copy, Drop, Serde, Introspect, PartialEq)]
 pub enum GameStatus {
-    Active,
-    Won,
-    Abandoned,
+    #[default]
+    Active = 0,
+    Won = 1,
+    Abandoned = 2,
 }
 
-#[derive(Drop, Serde)]
+impl GameStatusIntoFelt252 of Into<GameStatus, felt252> {
+    fn into(self: GameStatus) -> felt252 {
+        match self {
+            GameStatus::Active => 0,
+            GameStatus::Won => 1,
+            GameStatus::Abandoned => 2,
+        }
+    }
+}
+
+impl Felt252TryIntoGameStatus of TryInto<felt252, GameStatus> {
+    fn try_into(self: felt252) -> Option<GameStatus> {
+        if self == 0 {
+            Option::Some(GameStatus::Active)
+        } else if self == 1 {
+            Option::Some(GameStatus::Won)
+        } else if self == 2 {
+            Option::Some(GameStatus::Abandoned)
+        } else {
+            Option::None
+        }
+    }
+}
+
+#[derive(Copy, Drop, Serde)]
 #[dojo::model]
 pub struct GameState {
     #[key]
     pub game_id: u32,
     pub player: ContractAddress,
     pub difficulty: u8,          // 1=Easy(8 cards), 2=Medium(16), 3=Hard(24)
-    pub cards: Array<Card>,       // Array of cards
-    pub flipped_indices: Array<u8>, // Currently flipped (max 2)
+    pub total_cards: u8,         // Total number of cards
+    pub flipped_card_1: u8,      // First flipped card index (255 = none)
+    pub flipped_card_2: u8,      // Second flipped card index (255 = none)
     pub matched_count: u8,       // Number of pairs matched
     pub total_pairs: u8,         // Total pairs in game
     pub moves: u32,              // Number of moves made
@@ -33,7 +58,6 @@ pub impl GameStateImpl of GameStateTrait {
         game_id: u32,
         player: ContractAddress,
         difficulty: u8,
-        cards: Array<Card>,
         started_at: u64
     ) -> GameState {
         let total_pairs = match difficulty {
@@ -42,13 +66,16 @@ pub impl GameStateImpl of GameStateTrait {
             3 => 12_u8,
             _ => 8_u8,
         };
-        
+
+        let total_cards = total_pairs * 2;
+
         GameState {
             game_id,
             player,
             difficulty,
-            cards,
-            flipped_indices: array![],
+            total_cards,
+            flipped_card_1: 255,  // 255 means no card flipped
+            flipped_card_2: 255,
             matched_count: 0,
             total_pairs,
             moves: 0,
@@ -59,13 +86,17 @@ pub impl GameStateImpl of GameStateTrait {
             elapsed_time: 0,
         }
     }
-    
+
     fn is_complete(self: @GameState) -> bool {
         *self.matched_count == *self.total_pairs
     }
-    
+
     fn can_flip_card(self: @GameState) -> bool {
-        self.flipped_indices.len() < 2
+        *self.flipped_card_1 == 255 || *self.flipped_card_2 == 255
+    }
+
+    fn has_two_flipped(self: @GameState) -> bool {
+        *self.flipped_card_1 != 255 && *self.flipped_card_2 != 255
     }
 }
 

@@ -1,7 +1,6 @@
-use starknet::ContractAddress;
-
+// Card is now a simple struct, not a model
+// Cards are stored using the GameCards model
 #[derive(Copy, Drop, Serde, Introspect)]
-#[dojo::model]
 pub struct Card {
     pub id: u8,              // 0-23 (for 12 pairs)
     pub value: u8,           // 0-11 (12 unique values)

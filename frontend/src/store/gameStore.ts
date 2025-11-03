@@ -4,44 +4,65 @@ import { GameState, Difficulty, Card, PlayerStats, LeaderboardEntry, TelegramUse
 import { GameController } from '../dojo/gameController';
 import { createDemoGame, checkCardsMatch, calculateScore } from './demoGame';
 import { playFlipSound, playMatchSound, playMismatchSound, playVictorySound } from '../utils/sounds';
+import { cartridgeController } from '../cartridge/CartridgeController';
+import { mintScoreNFT } from '../cartridge/nftMinter';
 
 interface GameStore {
   // User & Account
   telegramUser: TelegramUser | null;
   account: Account | null;
   isAccountLoading: boolean;
-  
+
+  // Wallet State (Cartridge Controller)
+  walletAddress: string | null;
+  isWalletConnected: boolean;
+  isWalletConnecting: boolean;
+  walletUsername: string | null;
+
+  // NFT Minting State
+  isMinting: boolean;
+  mintTxHash: string | null;
+  mintError: string | null;
+
   // Game State
   currentGame: GameState | null;
   gameController: GameController | null;
   isGameLoading: boolean;
-  
+
   // UI State
   selectedDifficulty: Difficulty | null;
   flippedCards: number[];
   isChecking: boolean;
   showWinModal: boolean;
-  
+
   // Stats & Leaderboard
   playerStats: PlayerStats | null;
   leaderboard: LeaderboardEntry[];
-  
+
   // Actions
   setTelegramUser: (user: TelegramUser | null) => void;
   setAccount: (account: Account | null) => void;
   setGameController: (controller: GameController | null) => void;
-  
+
+  // Wallet Actions
+  connectWallet: () => Promise<void>;
+  disconnectWallet: () => Promise<void>;
+
+  // NFT Actions
+  mintNFT: () => Promise<void>;
+  clearMintError: () => void;
+
   // Game Actions
   startNewGame: (difficulty: Difficulty) => Promise<void>;
   flipCard: (index: number) => Promise<void>;
   checkMatch: () => Promise<void>;
   abandonGame: () => Promise<void>;
   resetGame: () => void;
-  
+
   // UI Actions
   setSelectedDifficulty: (difficulty: Difficulty | null) => void;
   setShowWinModal: (show: boolean) => void;
-  
+
   // Stats Actions
   setPlayerStats: (stats: PlayerStats | null) => void;
   setLeaderboard: (entries: LeaderboardEntry[]) => void;
@@ -52,24 +73,130 @@ export const useGameStore = create<GameStore>((set, get) => ({
   telegramUser: null,
   account: null,
   isAccountLoading: false,
-  
+
+  // Wallet State
+  walletAddress: null,
+  isWalletConnected: false,
+  isWalletConnecting: false,
+  walletUsername: null,
+
+  // NFT Minting State
+  isMinting: false,
+  mintTxHash: null,
+  mintError: null,
+
   currentGame: null,
   gameController: null,
   isGameLoading: false,
-  
+
   selectedDifficulty: null,
   flippedCards: [],
   isChecking: false,
   showWinModal: false,
-  
+
   playerStats: null,
   leaderboard: [],
-  
+
   // Setters
   setTelegramUser: (user) => set({ telegramUser: user }),
   setAccount: (account) => set({ account }),
   setGameController: (controller) => set({ gameController: controller }),
-  
+
+  // Wallet Actions
+  connectWallet: async () => {
+    set({ isWalletConnecting: true });
+
+    try {
+      console.log('🔌 Connecting wallet...');
+      const result = await cartridgeController.connect();
+
+      set({
+        walletAddress: result.address,
+        walletUsername: result.username,
+        isWalletConnected: true,
+        isWalletConnecting: false,
+      });
+
+      console.log('✅ Wallet connected:', result.address);
+    } catch (error) {
+      console.error('❌ Failed to connect wallet:', error);
+      set({ isWalletConnecting: false });
+      throw error;
+    }
+  },
+
+  disconnectWallet: async () => {
+    try {
+      console.log('🔌 Disconnecting wallet...');
+      await cartridgeController.disconnect();
+
+      set({
+        walletAddress: null,
+        walletUsername: null,
+        isWalletConnected: false,
+        mintTxHash: null,
+        mintError: null,
+      });
+
+      console.log('✅ Wallet disconnected');
+    } catch (error) {
+      console.error('❌ Failed to disconnect wallet:', error);
+      throw error;
+    }
+  },
+
+  // NFT Actions
+  mintNFT: async () => {
+    const { currentGame, walletAddress } = get();
+
+    if (!currentGame) {
+      console.error('No active game');
+      return;
+    }
+
+    if (!walletAddress) {
+      set({ mintError: 'Wallet not connected' });
+      return;
+    }
+
+    set({ isMinting: true, mintError: null, mintTxHash: null });
+
+    try {
+      console.log('🎨 Minting NFT for score:', currentGame.score);
+
+      const result = await mintScoreNFT({
+        recipient: walletAddress,
+        score: currentGame.score,
+        timestamp: Math.floor(Date.now() / 1000),
+        gameId: currentGame.game_id,
+        difficulty: currentGame.difficulty,
+      });
+
+      if (result.success) {
+        set({
+          isMinting: false,
+          mintTxHash: result.transactionHash || null,
+          mintError: null,
+        });
+        console.log('✅ NFT minted successfully!', result.transactionHash);
+      } else {
+        set({
+          isMinting: false,
+          mintError: result.error || 'Failed to mint NFT',
+        });
+        console.error('❌ Failed to mint NFT:', result.error);
+      }
+    } catch (error: any) {
+      console.error('❌ Failed to mint NFT:', error);
+      set({
+        isMinting: false,
+        mintError: error.message || 'Failed to mint NFT',
+      });
+    }
+  },
+
+  clearMintError: () => set({ mintError: null }),
+
   // Game Actions
   startNewGame: async (difficulty: Difficulty) => {
     const { gameController } = get();

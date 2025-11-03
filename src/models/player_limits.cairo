@@ -26,17 +26,18 @@ pub impl PlayerLimitsImpl of PlayerLimitsTrait {
 
     fn can_start_game(self: @PlayerLimits, current_time: u64) -> bool {
         // Check cooldown period
-        if current_time - *self.last_game_timestamp < MIN_GAME_INTERVAL {
+        if (current_time - *self.last_game_timestamp) < MIN_GAME_INTERVAL {
             return false;
         }
 
         // Check if we need to reset daily counter
-        if current_time - *self.last_daily_reset >= 86400 { // 24 hours
+        if (current_time - *self.last_daily_reset) >= 86400 { // 24 hours
             return true; // Will reset counter in start_game
         }
 
         // Check daily limit
-        *self.games_today < MAX_GAMES_PER_DAY
+        let games = *self.games_today;
+        games < MAX_GAMES_PER_DAY
     }
 
     fn update_limits(ref self: PlayerLimits, current_time: u64) {

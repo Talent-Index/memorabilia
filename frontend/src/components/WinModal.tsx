@@ -4,13 +4,22 @@ import Confetti from 'react-confetti';
 import { useGameStore } from '../store/gameStore';
 import { calculateStars, calculateGrade, GAME_CONFIGS } from '../types';
 import { hapticNotification } from '../telegram/telegram';
+import { isScoreEligibleForNFT } from '../cartridge/config';
 
 interface WinModalProps {
   onClose: () => void;
 }
 
 export default function WinModal({ onClose }: WinModalProps) {
-  const { currentGame } = useGameStore();
+  const {
+    currentGame,
+    isWalletConnected,
+    isMinting,
+    mintTxHash,
+    mintError,
+    mintNFT,
+    clearMintError,
+  } = useGameStore();
 
   useEffect(() => {
     hapticNotification('success');
@@ -23,10 +32,19 @@ export default function WinModal({ onClose }: WinModalProps) {
   const grade = calculateGrade(currentGame.score);
   const elapsedTime = Math.floor((Date.now() - currentGame.started_at) / 1000);
 
+  // Check if eligible for NFT minting
+  const isEligibleForNFT = isScoreEligibleForNFT(currentGame.score);
+  const canMintNFT = isEligibleForNFT && isWalletConnected && !mintTxHash;
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const handleMintNFT = async () => {
+    clearMintError();
+    await mintNFT();
   };
 
   return (
@@ -135,6 +153,65 @@ export default function WinModal({ onClose }: WinModalProps) {
             </div>
           </div>
 
+          {/* NFT Minting Section */}
+          {isEligibleForNFT && (
+            <div className="mb-6 p-4 bg-gradient-to-r from-orange-900/30 to-purple-900/30 border-2 border-orange-500 rounded-xl">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center space-x-2">
+                  <span className="text-3xl">🎃</span>
+                  <div>
+                    <h3 className="font-bold text-orange-400">NFT Eligible!</h3>
+                    <p className="text-xs text-gray-400">Score ≥ 10</p>
+                  </div>
+                </div>
+              </div>
+
+              {!isWalletConnected && (
+                <p className="text-sm text-yellow-400 mb-3">
+                  ⚠️ Connect your wallet to mint NFT
+                </p>
+              )}
+
+              {mintTxHash && (
+                <div className="mb-3 p-3 bg-green-900/30 border border-green-500 rounded-lg">
+                  <p className="text-sm text-green-400 font-medium mb-1">✅ NFT Minted!</p>
+                  <p className="text-xs text-gray-400 break-all">
+                    Tx: {mintTxHash.slice(0, 10)}...{mintTxHash.slice(-8)}
+                  </p>
+                </div>
+              )}
+
+              {mintError && (
+                <div className="mb-3 p-3 bg-red-900/30 border border-red-500 rounded-lg">
+                  <p className="text-sm text-red-400">❌ {mintError}</p>
+                </div>
+              )}
+
+              {canMintNFT && (
+                <button
+                  onClick={handleMintNFT}
+                  disabled={isMinting}
+                  className={`
+                    w-full py-3 rounded-xl font-bold text-lg transition-all duration-300 transform
+                    ${isMinting
+                      ? 'bg-gray-700 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-orange-600 to-purple-600 hover:from-orange-700 hover:to-purple-700 hover:scale-105'
+                    }
+                  `}
+                >
+                  {isMinting ? (
+                    <span className="flex items-center justify-center space-x-2">
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <span>Minting...</span>
+                    </span>
+                  ) : (
+                    'Mint NFT 🎃'
+                  )}
+                </button>
+              )}
+            </div>
+          )}
+
           {/* Actions */}
           <div className="space-y-3">
             <button
@@ -143,7 +220,7 @@ export default function WinModal({ onClose }: WinModalProps) {
             >
               Play Again
             </button>
-            
+
             <button
               onClick={() => {
                 // TODO: Share score

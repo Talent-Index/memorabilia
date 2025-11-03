@@ -1,29 +1,63 @@
-# 🎮 Memorabilia - On-Chain Memory Game
+# Memorabilia
 
-A fully on-chain memory card matching game built on Starknet using the Dojo framework, integrated with Telegram Mini Apps for seamless user experience through Account Abstraction.
+## Submission Track
+Full Game
 
-## 🌟 Features
+## Project Summary
+A fully on-chain memory card matching game built on Starknet using the Dojo framework, integrated with Telegram Mini Apps for seamless user experience through Account Abstraction. The game features a custom Dojo Telegram SDK that enables gasless transactions and real-time game state updates.
 
-### Sprint 1: Foundation (Authentication & Account Abstraction) ✅
-- **User Account Management**: Telegram-based authentication with on-chain identity
-- **Session Keys**: Gasless transactions using session key policies
-- **Account Registry**: Secure account creation and management
+## GitHub
+[Memorabilia Repository](https://github.com/Talent-Index/memorabilia)
+
+## Play
+1. Install dependencies:
+```bash
+# Install frontend dependencies
+cd frontend
+npm install
+
+# Install SDK dependencies
+cd ../dojo-telegram-sdk
+npm install
+```
+
+2. Start the game:
+```bash
+# Run in demo mode (no contracts required)
+./scripts/run_local_demo.sh --demo
+```
+
+For full blockchain mode, see `DEPLOYMENT_GUIDE.md` for contract deployment steps.
+
+## Twitter
+- Project: @
+
+## Team Members
+- Ahmed [@ahmedabdikadir914](https://github.com/ahmedabdikadir914) - ahmedabdikadir914@gmail.com
+- Leonard [@tweenhaven35](https://github.com/tweenhaven35) - tweenhaven35@gmail.com
+- Daniel [@mwihoti](https://github.com/mwihoti) - DanielMwihoti@gmail.com
+- Kelly [@gakikelly](https://github.com/gakikelly) - gakikelly403@gmail.com
+- Peter Maina [@mainapeter](https://github.com/mainapeter) - mainapeterkanyuki@gmail.com
+- Rosemary [@rozypopyl](https://github.com/rozypopyl) - Rozypopyl6@gmail.com
+
+## Key Features
+- Memory card matching game with multiple difficulty levels
+- Real-time game state updates via Torii indexer
+- Gasless transactions using Account Abstraction
+- Telegram Mini App integration
+- Custom Dojo Telegram SDK for easy integration
+- On-chain leaderboard and achievements
+
+## Technical Stack
+- **Smart Contracts**: Cairo (Dojo framework)
+- **Frontend**: React + Vite + Tailwind
+- **Blockchain**: Starknet (Katana for local development)
+- **Integration**: Telegram Mini Apps API
+- **SDK**: Custom Dojo Telegram SDK
+- **Indexing**: Torii for real-time updates
 - **Greeting System**: Proof-of-concept for gasless interactions
 
-### Sprint 2: Core Game Logic ✅
-- **Memory Game Mechanics**: Classic card matching gameplay
-- **Multiple Difficulty Levels**:
-  - Easy: 8 cards (4 pairs)
-  - Medium: 16 cards (8 pairs)
-  - Hard: 24 cards (12 pairs)
-- **Smart Scoring System**: Based on moves, time, and difficulty
-- **On-Chain Randomness**: Provably fair card shuffling
-- **Real-time Game State**: All game logic executed on-chain
 
-### Sprint 3: Leaderboard System ✅
-- **Global Leaderboard**: Top 100 players ranked by score
-- **Player Statistics**: Track games played, best scores, and performance
-- **Difficulty-based Rankings**: Separate stats for each difficulty level
 
 ## 🏗️ Architecture
 

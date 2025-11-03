@@ -1,4 +1,5 @@
 import { useGameStore } from '../store/gameStore';
+import WalletButton from './WalletButton';
 
 interface HeaderProps {
   onShowLeaderboard: () => void;
@@ -24,6 +25,9 @@ export default function Header({ onShowLeaderboard, onBackToDifficulty, currentS
           
           {/* User Info & Actions */}
           <div className="flex items-center space-x-4">
+            {/* Wallet Connection Button */}
+            <WalletButton />
+
             {currentScreen === 'game' && (
               <button
                 onClick={onBackToDifficulty}
@@ -32,7 +36,7 @@ export default function Header({ onShowLeaderboard, onBackToDifficulty, currentS
                 Quit Game
               </button>
             )}
-            
+
             {currentScreen !== 'leaderboard' && (
               <button
                 onClick={onShowLeaderboard}
@@ -42,7 +46,7 @@ export default function Header({ onShowLeaderboard, onBackToDifficulty, currentS
                 <span>Leaderboard</span>
               </button>
             )}
-            
+
             {telegramUser && (
               <div className="flex items-center space-x-2 bg-gray-800 px-3 py-2 rounded-lg">
                 <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-sm font-bold">
