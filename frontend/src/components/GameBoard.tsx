@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useGameStore } from '../store/gameStore';
 import { GAME_CONFIGS } from '../types';
-import { CARD_EMOJIS } from '../store/demoGame';
 import Card from './Card';
 
 export default function GameBoard() {
@@ -55,39 +54,39 @@ export default function GameBoard() {
     <div className="max-w-6xl mx-auto">
       {/* Preview Message */}
       {showPreview && (
-        <div className="mb-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl p-4 text-center animate-pulse">
-          <div className="text-xl font-bold text-white">👀 Memorize the cards!</div>
-          <div className="text-sm text-white/80 mt-1">Game starts in a moment...</div>
+        <div className="mb-6 bg-gradient-to-r from-museum-blue-600 to-museum-bronze-600 rounded-xl p-4 text-center animate-pulse">
+          <div className="text-xl font-bold text-white">👀 Memorize the Artifacts!</div>
+          <div className="text-sm text-white/80 mt-1">Exhibition starts in a moment...</div>
         </div>
       )}
 
       {/* Game Stats */}
       <div className="mb-6 grid grid-cols-3 gap-4">
-        <div className="bg-gray-800/50 backdrop-blur-lg rounded-xl p-4 text-center">
-          <div className="text-3xl font-bold text-blue-400">{currentGame.moves}</div>
-          <div className="text-sm text-gray-400">Moves</div>
-          <div className="text-xs text-gray-500 mt-1">
+        <div className="bg-museum-stone-800/50 backdrop-blur-lg rounded-xl p-4 text-center border border-museum-bronze-400/20">
+          <div className="text-3xl font-bold text-museum-blue-400">{currentGame.moves}</div>
+          <div className="text-sm text-museum-stone-400">Discoveries</div>
+          <div className="text-xs text-museum-stone-500 mt-1">
             Optimal: {config.optimalMoves}
           </div>
         </div>
 
-        <div className="bg-gray-800/50 backdrop-blur-lg rounded-xl p-4 text-center">
-          <div className="text-3xl font-bold text-green-400">{formatTime(elapsedTime)}</div>
-          <div className="text-sm text-gray-400">Time</div>
+        <div className="bg-museum-stone-800/50 backdrop-blur-lg rounded-xl p-4 text-center border border-museum-bronze-400/20">
+          <div className="text-3xl font-bold text-museum-gold-400">{formatTime(elapsedTime)}</div>
+          <div className="text-sm text-museum-stone-400">Time</div>
         </div>
 
-        <div className="bg-gray-800/50 backdrop-blur-lg rounded-xl p-4 text-center">
-          <div className="text-3xl font-bold text-purple-400">
+        <div className="bg-museum-stone-800/50 backdrop-blur-lg rounded-xl p-4 text-center border border-museum-bronze-400/20">
+          <div className="text-3xl font-bold text-museum-bronze-400">
             {currentGame.matched_count}/{currentGame.total_pairs}
           </div>
-          <div className="text-sm text-gray-400">Pairs</div>
+          <div className="text-sm text-museum-stone-400">Artifacts</div>
         </div>
       </div>
 
       {/* Progress Bar */}
-      <div className="mb-6 bg-gray-800/50 rounded-full h-4 overflow-hidden">
+      <div className="mb-6 bg-museum-stone-800/50 rounded-full h-4 overflow-hidden border border-museum-bronze-400/20">
         <div
-          className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-500 ease-out"
+          className="h-full bg-gradient-to-r from-museum-blue-500 to-museum-bronze-500 transition-all duration-500 ease-out"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -98,8 +97,8 @@ export default function GameBoard() {
           const isMatched = card.is_matched;
           // Card is flipped if: preview mode, currently flipped, or matched
           const isFlipped = showPreview || flippedCards.includes(index) || isMatched;
-          // Use emojis from game state (demo mode) or fallback to CARD_EMOJIS
-          const emoji = currentGame.emojis?.[card.value] || CARD_EMOJIS[card.value];
+          // Use emojis from game state (era-specific, always provided)
+          const emoji = currentGame.emojis?.[card.value];
 
           return (
             <Card
@@ -116,8 +115,8 @@ export default function GameBoard() {
 
       {/* Hints */}
       {isChecking && (
-        <div className="text-center text-yellow-400 animate-pulse">
-          🔍 Checking match...
+        <div className="text-center text-museum-gold-400 animate-pulse">
+          🔍 Examining artifacts...
         </div>
       )}
     </div>

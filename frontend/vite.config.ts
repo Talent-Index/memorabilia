@@ -7,10 +7,6 @@ export default defineConfig({
   server: {
     port: 3000,
     host: true,
-    https: {
-      cert: './localhost.pem',
-      key: './localhost-key.pem',
-    },
   },
   build: {
     target: 'esnext',

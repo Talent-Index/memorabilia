@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { Account } from 'starknet';
 import { GameState, Difficulty, Card, PlayerStats, LeaderboardEntry, TelegramUser } from '../types';
 import { GameController } from '../dojo/gameController';
-import { createDemoGame, checkCardsMatch, calculateScore } from './demoGame';
+import { createDemoGame, checkCardsMatch, calculateScore, getEmojisForDifficulty } from './demoGame';
 import { playFlipSound, playMatchSound, playMismatchSound, playVictorySound } from '../utils/sounds';
 import { cartridgeController } from '../cartridge/CartridgeController';
 import { mintScoreNFT } from '../cartridge/nftMinter';
@@ -225,16 +225,22 @@ export const useGameStore = create<GameStore>((set, get) => ({
       // Blockchain mode
       console.log('⛓️ Starting game on blockchain');
       const gameId = await gameController.startGame(difficulty);
-
+      
+      // Get era-specific emojis for this game
+      const eraEmojis = getEmojisForDifficulty(difficulty);
+      const totalPairs = difficulty === Difficulty.Easy ? 4 : difficulty === Difficulty.Medium ? 8 : 12;
+      const selectedEmojis = eraEmojis.slice(0, totalPairs);
+      
       // Create initial game state
       const newGame: GameState = {
         game_id: gameId,
         player: get().account?.address || '',
         difficulty,
         cards: [],
+        emojis: selectedEmojis, // Add era-specific emojis
         flipped_indices: [],
         matched_count: 0,
-        total_pairs: difficulty === Difficulty.Easy ? 4 : difficulty === Difficulty.Medium ? 8 : 12,
+        total_pairs: totalPairs,
         moves: 0,
         score: 0,
         started_at: Date.now(),

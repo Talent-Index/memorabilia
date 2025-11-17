@@ -38,22 +38,22 @@ export default function Card({ emoji, isFlipped, isMatched, onClick, disabled }:
           >
             <div className={`
               w-full h-full rounded-2xl flex items-center justify-center relative overflow-hidden
-              bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600
-              border-4 border-white/30
-              ${!disabled && !isMatched ? 'hover:border-white/50' : ''}
+              bg-gradient-to-br from-museum-bronze-600 via-museum-bronze-500 to-museum-gold-600
+              border-4 border-museum-bronze-400/50
+              ${!disabled && !isMatched ? 'hover:border-museum-gold-400/70' : ''}
               transition-all duration-200
               shadow-xl
             `}>
-              {/* Pattern overlay */}
-              <div className="absolute inset-0 opacity-20">
+              {/* Ancient pattern overlay */}
+              <div className="absolute inset-0 opacity-30">
                 <div className="absolute inset-0" style={{
-                  backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,.1) 10px, rgba(255,255,255,.1) 20px)'
+                  backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(250,204,21,.3) 10px, rgba(250,204,21,.3) 20px)'
                 }}></div>
               </div>
 
-              {/* Logo */}
-              <div className="text-6xl sm:text-7xl md:text-8xl filter drop-shadow-lg z-10">
-                🎮
+              {/* Museum Logo */}
+              <div className="text-5xl sm:text-6xl md:text-7xl filter drop-shadow-lg z-10">
+                🏛️
               </div>
             </div>
           </div>
@@ -69,8 +69,8 @@ export default function Card({ emoji, isFlipped, isMatched, onClick, disabled }:
             <div className={`
               w-full h-full rounded-2xl flex items-center justify-center relative
               ${isMatched
-                ? 'bg-gradient-to-br from-green-400 via-emerald-500 to-teal-600 border-4 border-green-300 shadow-green-500/50'
-                : 'bg-gradient-to-br from-slate-100 to-slate-200 border-4 border-slate-300'
+                ? 'bg-gradient-to-br from-museum-gold-400 via-museum-gold-500 to-museum-bronze-500 border-4 border-museum-gold-300 shadow-museum-gold-500/50'
+                : 'bg-gradient-to-br from-museum-sand-100 to-museum-sand-200 border-4 border-museum-stone-300'
               }
               transition-all duration-300
               shadow-xl
@@ -78,16 +78,16 @@ export default function Card({ emoji, isFlipped, isMatched, onClick, disabled }:
               {/* Matched effect */}
               {isMatched && (
                 <motion.div
-                  className="absolute inset-0 bg-white/20 rounded-2xl"
+                  className="absolute inset-0 bg-museum-gold-300/30 rounded-2xl"
                   initial={{ scale: 0, opacity: 1 }}
                   animate={{ scale: 2, opacity: 0 }}
                   transition={{ duration: 0.6 }}
                 />
               )}
 
-              {/* Emoji */}
+              {/* Artifact Emoji */}
               <motion.div
-                className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl filter drop-shadow-md z-10"
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl filter drop-shadow-md z-10"
                 initial={false}
                 animate={isMatched ? {
                   scale: [1, 1.3, 1],

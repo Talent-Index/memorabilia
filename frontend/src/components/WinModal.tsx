@@ -73,7 +73,7 @@ export default function WinModal({ onClose }: WinModalProps) {
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.5, opacity: 0, y: 50 }}
           transition={{ type: 'spring', duration: 0.5 }}
-          className="relative bg-gradient-to-br from-gray-900 to-gray-800 rounded-3xl p-8 max-w-md w-full border-4 border-yellow-500 shadow-2xl"
+          className="relative bg-gradient-to-br from-museum-stone-900 to-museum-stone-800 rounded-3xl p-8 max-w-md w-full border-4 border-museum-gold-500 shadow-2xl"
         >
           {/* Trophy */}
           <div className="text-center mb-6">
@@ -85,8 +85,8 @@ export default function WinModal({ onClose }: WinModalProps) {
             >
               🏆
             </motion.div>
-            <h2 className="text-4xl font-bold gradient-text mb-2">Victory!</h2>
-            <p className="text-gray-400">You completed the game!</p>
+            <h2 className="text-4xl font-bold bg-gradient-to-r from-museum-gold-400 to-museum-bronze-500 bg-clip-text text-transparent mb-2">Exhibition Complete!</h2>
+            <p className="text-museum-stone-400">You've completed your museum collection!</p>
           </div>
 
           {/* Stars */}
@@ -112,10 +112,13 @@ export default function WinModal({ onClose }: WinModalProps) {
               transition={{ delay: 0.6, type: 'spring' }}
               className={`
                 inline-block text-6xl font-bold px-6 py-3 rounded-2xl
-                ${grade === 'S' ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white' :
-                  grade === 'A' ? 'bg-gradient-to-r from-green-400 to-emerald-500 text-white' :
-                  grade === 'B' ? 'bg-gradient-to-r from-blue-400 to-cyan-500 text-white' :
-                  'bg-gradient-to-r from-gray-400 to-gray-500 text-white'
+                ${grade === 'S'
+                  ? 'bg-gradient-to-r from-museum-gold-400 to-museum-bronze-500 text-white'
+                  : grade === 'A'
+                  ? 'bg-gradient-to-r from-museum-blue-400 to-museum-stone-500 text-white'
+                  : grade === 'B'
+                  ? 'bg-gradient-to-r from-museum-bronze-400 to-museum-stone-500 text-white'
+                  : 'bg-gradient-to-r from-museum-stone-400 to-museum-stone-500 text-white'
                 }
               `}
             >
@@ -125,65 +128,65 @@ export default function WinModal({ onClose }: WinModalProps) {
 
           {/* Stats */}
           <div className="space-y-3 mb-6">
-            <div className="flex justify-between items-center bg-gray-800/50 rounded-lg p-3">
-              <span className="text-gray-400">Score</span>
-              <span className="text-2xl font-bold text-yellow-400">{currentGame.score.toLocaleString()}</span>
+            <div className="flex justify-between items-center bg-museum-stone-800/50 rounded-lg p-3">
+              <span className="text-museum-stone-400">Score</span>
+              <span className="text-2xl font-bold text-museum-gold-400">{currentGame.score.toLocaleString()}</span>
             </div>
             
-            <div className="flex justify-between items-center bg-gray-800/50 rounded-lg p-3">
-              <span className="text-gray-400">Moves</span>
+            <div className="flex justify-between items-center bg-museum-stone-800/50 rounded-lg p-3">
+              <span className="text-museum-stone-400">Discoveries</span>
               <span className="text-xl font-bold">
                 {currentGame.moves}
-                <span className="text-sm text-gray-500 ml-2">
+                <span className="text-sm text-museum-stone-500 ml-2">
                   (Optimal: {config.optimalMoves})
                 </span>
               </span>
             </div>
             
-            <div className="flex justify-between items-center bg-gray-800/50 rounded-lg p-3">
-              <span className="text-gray-400">Time</span>
-              <span className="text-xl font-bold text-blue-400">{formatTime(elapsedTime)}</span>
+            <div className="flex justify-between items-center bg-museum-stone-800/50 rounded-lg p-3">
+              <span className="text-museum-stone-400">Time</span>
+              <span className="text-xl font-bold text-museum-blue-400">{formatTime(elapsedTime)}</span>
             </div>
             
-            <div className="flex justify-between items-center bg-gray-800/50 rounded-lg p-3">
-              <span className="text-gray-400">Difficulty</span>
-              <span className="text-xl font-bold text-purple-400">
-                {currentGame.difficulty === 1 ? 'Easy' : currentGame.difficulty === 2 ? 'Medium' : 'Hard'}
+            <div className="flex justify-between items-center bg-museum-stone-800/50 rounded-lg p-3">
+              <span className="text-museum-stone-400">Era</span>
+              <span className="text-xl font-bold text-museum-bronze-400">
+                {currentGame.difficulty === 1 ? 'Ancient Era' : currentGame.difficulty === 2 ? 'Medieval Times' : 'Modern Era'}
               </span>
             </div>
           </div>
 
           {/* NFT Minting Section */}
           {isEligibleForNFT && (
-            <div className="mb-6 p-4 bg-gradient-to-r from-orange-900/30 to-purple-900/30 border-2 border-orange-500 rounded-xl">
+            <div className="mb-6 p-4 bg-gradient-to-r from-museum-bronze-900/30 to-museum-stone-900/30 border-2 border-museum-bronze-500 rounded-xl">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center space-x-2">
-                  <span className="text-3xl">🎃</span>
+                  <span className="text-3xl">🏛️</span>
                   <div>
-                    <h3 className="font-bold text-orange-400">NFT Eligible!</h3>
-                    <p className="text-xs text-gray-400">Score ≥ 10</p>
+                    <h3 className="font-bold text-museum-bronze-400">NFT Eligible!</h3>
+                    <p className="text-xs text-museum-stone-400">Score ≥ 10</p>
                   </div>
                 </div>
               </div>
 
               {!isWalletConnected && (
-                <p className="text-sm text-yellow-400 mb-3">
+                <p className="text-sm text-museum-gold-400 mb-3">
                   ⚠️ Connect your wallet to mint NFT
                 </p>
               )}
 
               {mintTxHash && (
-                <div className="mb-3 p-3 bg-green-900/30 border border-green-500 rounded-lg">
-                  <p className="text-sm text-green-400 font-medium mb-1">✅ NFT Minted!</p>
-                  <p className="text-xs text-gray-400 break-all">
+                <div className="mb-3 p-3 bg-museum-stone-900/30 border border-museum-stone-500 rounded-lg">
+                  <p className="text-sm text-museum-stone-400 font-medium mb-1">✅ NFT Minted!</p>
+                  <p className="text-xs text-museum-stone-500 break-all">
                     Tx: {mintTxHash.slice(0, 10)}...{mintTxHash.slice(-8)}
                   </p>
                 </div>
               )}
 
               {mintError && (
-                <div className="mb-3 p-3 bg-red-900/30 border border-red-500 rounded-lg">
-                  <p className="text-sm text-red-400">❌ {mintError}</p>
+                <div className="mb-3 p-3 bg-museum-stone-900/30 border border-museum-stone-500 rounded-lg">
+                  <p className="text-sm text-museum-stone-400">❌ {mintError}</p>
                 </div>
               )}
 
@@ -194,8 +197,8 @@ export default function WinModal({ onClose }: WinModalProps) {
                   className={`
                     w-full py-3 rounded-xl font-bold text-lg transition-all duration-300 transform
                     ${isMinting
-                      ? 'bg-gray-700 cursor-not-allowed'
-                      : 'bg-gradient-to-r from-orange-600 to-purple-600 hover:from-orange-700 hover:to-purple-700 hover:scale-105'
+                      ? 'bg-museum-stone-700 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-museum-bronze-600 to-museum-stone-600 hover:from-museum-bronze-700 hover:to-museum-stone-700 hover:scale-105'
                     }
                   `}
                 >
@@ -205,7 +208,7 @@ export default function WinModal({ onClose }: WinModalProps) {
                       <span>Minting...</span>
                     </span>
                   ) : (
-                    'Mint NFT 🎃'
+                    'Mint NFT 🏛️'
                   )}
                 </button>
               )}
@@ -216,9 +219,9 @@ export default function WinModal({ onClose }: WinModalProps) {
           <div className="space-y-3">
             <button
               onClick={onClose}
-              className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105"
+              className="w-full py-4 bg-gradient-to-r from-museum-blue-600 to-museum-bronze-600 hover:from-museum-blue-700 hover:to-museum-bronze-700 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105"
             >
-              Play Again
+              New Exhibition
             </button>
 
             <button
@@ -226,9 +229,9 @@ export default function WinModal({ onClose }: WinModalProps) {
                 // TODO: Share score
                 alert('Share functionality coming soon!');
               }}
-              className="w-full py-3 bg-gray-700 hover:bg-gray-600 rounded-xl font-medium transition-colors"
+              className="w-full py-3 bg-museum-stone-700 hover:bg-museum-stone-600 rounded-xl font-medium transition-colors"
             >
-              Share Score 📤
+              Share Collection 📤
             </button>
           </div>
         </motion.div>

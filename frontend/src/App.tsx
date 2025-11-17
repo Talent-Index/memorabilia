@@ -128,30 +128,33 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 text-white">
-      <Header
-        onShowLeaderboard={handleShowLeaderboard}
-        onBackToDifficulty={handleBackToDifficulty}
-        currentScreen={screen}
-      />
+    <div className="min-h-screen bg-gradient-to-br from-museum-blue-100 via-museum-blue-500 to-museum-blue-200 text-museum-stone-900">
+      <div className="absolute inset-0 bg-gradient-to-br from-museum-sand-50/30 to-museum-gold-50/20 pointer-events-none"></div>
+      <div className="relative z-10">
+        <Header
+          onShowLeaderboard={handleShowLeaderboard}
+          onBackToDifficulty={handleBackToDifficulty}
+          currentScreen={screen}
+        />
 
-      <main className="container mx-auto px-4 py-8">
-        {screen === 'difficulty' && (
-          <DifficultySelector onStart={() => setScreen('game')} />
+        <main className="container mx-auto px-4 py-8">
+          {screen === 'difficulty' && (
+            <DifficultySelector onStart={() => setScreen('game')} />
+          )}
+
+          {screen === 'game' && currentGame && (
+            <GameBoard />
+          )}
+
+          {screen === 'leaderboard' && (
+            <Leaderboard onBack={handleBackToDifficulty} />
+          )}
+        </main>
+
+        {showWinModal && (
+          <WinModal onClose={handleWinModalClose} />
         )}
-
-        {screen === 'game' && currentGame && (
-          <GameBoard />
-        )}
-
-        {screen === 'leaderboard' && (
-          <Leaderboard onBack={handleBackToDifficulty} />
-        )}
-      </main>
-
-      {showWinModal && (
-        <WinModal onClose={handleWinModalClose} />
-      )}
+      </div>
     </div>
   );
 }

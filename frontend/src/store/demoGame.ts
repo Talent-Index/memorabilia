@@ -1,11 +1,23 @@
 import { GameState, Difficulty, Card } from '../types';
 
-// Game emojis for cards
-export const CARD_EMOJIS = [
-  '🎮', '🕹️', '⚡', '👾', '🎯', '🎲', '🎪', '🎨',
-  '🎭', '🎬', '🎸', '🎹', '🎺', '🎻', '🥁', '🎤',
-  '🏆', '🏅', '⭐', '💎', '👑', '🔥', '💫', '✨'
-];
+// Era-specific card emojis for museum theme
+export const ANCIENT_EMOJIS = ['🏺', '🗿', '👑', '⚱️', '📜', '🏛️', '🗿', '🏺', '🎭', '🎨', '📿', '⚜️'];
+export const MEDIEVAL_EMOJIS = ['⚔️', '🛡️', '🏰', '👑', '⚜️', '📿', '🗡️', '🏹', '🎭', '🎨', '📿', '⚜️'];
+export const MODERN_EMOJIS = ['🚀', '⏰', '📷', '📻', '🕰️', '🔭', '🔬', '💡', '🎭', '🎨', '📿', '⚜️'];
+
+// Get emojis based on difficulty (era)
+export function getEmojisForDifficulty(difficulty: Difficulty): string[] {
+  switch (difficulty) {
+    case Difficulty.Easy:
+      return ANCIENT_EMOJIS;
+    case Difficulty.Medium:
+      return MEDIEVAL_EMOJIS;
+    case Difficulty.Hard:
+      return MODERN_EMOJIS;
+    default:
+      return ANCIENT_EMOJIS;
+  }
+}
 
 // Fisher-Yates shuffle algorithm
 function shuffleArray<T>(array: T[]): T[] {
@@ -21,8 +33,9 @@ function shuffleArray<T>(array: T[]): T[] {
 export function generateDemoCards(difficulty: Difficulty): Card[] {
   const pairCount = difficulty === Difficulty.Easy ? 4 : difficulty === Difficulty.Medium ? 8 : 12;
 
-  // Select random emojis for this game
-  const selectedEmojis = shuffleArray(CARD_EMOJIS).slice(0, pairCount);
+  // Get era-specific emojis for this game
+  const eraEmojis = getEmojisForDifficulty(difficulty);
+  const selectedEmojis = shuffleArray(eraEmojis).slice(0, pairCount);
 
   // Create pairs (each emoji appears twice)
   const values: number[] = [];
@@ -50,8 +63,9 @@ export function createDemoGame(difficulty: Difficulty): GameState {
   const cards = generateDemoCards(difficulty);
   const totalPairs = difficulty === Difficulty.Easy ? 4 : difficulty === Difficulty.Medium ? 8 : 12;
 
-  // Select random emojis for this game
-  const selectedEmojis = shuffleArray(CARD_EMOJIS).slice(0, totalPairs);
+  // Get era-specific emojis for this game
+  const eraEmojis = getEmojisForDifficulty(difficulty);
+  const selectedEmojis = shuffleArray(eraEmojis).slice(0, totalPairs);
 
   return {
     game_id: Math.floor(Math.random() * 1000000),

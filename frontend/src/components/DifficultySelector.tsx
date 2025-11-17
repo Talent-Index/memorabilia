@@ -27,42 +27,44 @@ export default function DifficultySelector({ onStart }: DifficultySelectorProps)
   const difficulties = [
     {
       level: Difficulty.Easy,
-      name: 'Easy',
-      emoji: '😊',
-      color: 'from-green-500 to-emerald-600',
-      borderColor: 'border-green-500',
-      description: '4 pairs • 8 cards',
+      name: 'Ancient Era',
+      emoji: '🏺',
+      color: 'from-museum-bronze-500 to-museum-bronze-700',
+      borderColor: 'border-museum-bronze-500',
+      description: '4 artifacts • 8 cards',
     },
     {
       level: Difficulty.Medium,
-      name: 'Medium',
-      emoji: '🤔',
-      color: 'from-yellow-500 to-orange-600',
-      borderColor: 'border-yellow-500',
-      description: '8 pairs • 16 cards',
+      name: 'Medieval Times',
+      emoji: '⚔️',
+      color: 'from-museum-stone-600 to-museum-stone-800',
+      borderColor: 'border-museum-stone-600',
+      description: '8 artifacts • 16 cards',
     },
     {
       level: Difficulty.Hard,
-      name: 'Hard',
-      emoji: '😰',
-      color: 'from-red-500 to-pink-600',
-      borderColor: 'border-red-500',
-      description: '12 pairs • 24 cards',
+      name: 'Modern Era',
+      emoji: '🚀',
+      color: 'from-museum-blue-600 to-museum-blue-800',
+      borderColor: 'border-museum-blue-600',
+      description: '12 artifacts • 24 cards',
     },
   ];
 
   return (
     <div className="max-w-4xl mx-auto">
       <div className="text-center mb-12">
-        <h2 className="text-4xl font-bold mb-4">Choose Your Challenge</h2>
-        <p className="text-gray-400">Select a difficulty level to start playing</p>
+        <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-museum-gold-500 to-museum-bronze-600 bg-clip-text text-transparent">
+          Choose Your Time Period
+        </h2>
+        <p className="text-museum-stone-700">Select an era to begin discovering artifacts</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {difficulties.map((diff) => {
           const config = GAME_CONFIGS[diff.level];
           const isSelected = selectedDifficulty === diff.level;
-
+          
           return (
             <button
               key={diff.level}
@@ -71,35 +73,35 @@ export default function DifficultySelector({ onStart }: DifficultySelectorProps)
                 relative p-6 rounded-2xl transition-all duration-300 transform
                 ${isSelected 
                   ? `scale-105 border-4 ${diff.borderColor} shadow-2xl` 
-                  : 'border-2 border-gray-700 hover:scale-105 hover:border-gray-600'
+                  : 'border-2 border-museum-stone-400 hover:scale-105 hover:border-museum-bronze-400'
                 }
-                bg-gradient-to-br ${diff.color} bg-opacity-10
+                bg-gradient-to-br ${diff.color} bg-opacity-10 backdrop-blur-sm
               `}
             >
               {/* Emoji */}
               <div className="text-6xl mb-4">{diff.emoji}</div>
               
               {/* Name */}
-              <h3 className="text-2xl font-bold mb-2">{diff.name}</h3>
+              <h3 className="text-2xl font-bold mb-2 text-museum-stone-900">{diff.name}</h3>
               
               {/* Description */}
-              <p className="text-sm text-gray-300 mb-4">{diff.description}</p>
+              <p className="text-sm text-museum-stone-700 mb-4">{diff.description}</p>
               
               {/* Stats */}
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Optimal Moves:</span>
-                  <span className="font-bold">{config.optimalMoves}</span>
+                  <span className="text-museum-stone-600">Optimal Moves:</span>
+                  <span className="font-bold text-museum-stone-900">{config.optimalMoves}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Difficulty:</span>
-                  <span className="font-bold">{diff.name}</span>
+                  <span className="text-museum-stone-600">Era:</span>
+                  <span className="font-bold text-museum-stone-900">{diff.name}</span>
                 </div>
               </div>
               
               {/* Selected Indicator */}
               {isSelected && (
-                <div className="absolute top-4 right-4 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                <div className="absolute top-4 right-4 w-8 h-8 bg-museum-gold-500 rounded-full flex items-center justify-center">
                   <span className="text-white text-xl">✓</span>
                 </div>
               )}
@@ -116,44 +118,44 @@ export default function DifficultySelector({ onStart }: DifficultySelectorProps)
           className={`
             px-12 py-4 rounded-xl text-xl font-bold transition-all duration-300 transform
             ${selectedDifficulty && !isGameLoading
-              ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 hover:scale-105 shadow-lg'
-              : 'bg-gray-700 cursor-not-allowed opacity-50'
+              ? 'bg-gradient-to-r from-museum-gold-500 to-museum-bronze-600 hover:from-museum-gold-600 hover:to-museum-bronze-700 hover:scale-105 shadow-lg text-white'
+              : 'bg-museum-stone-600 cursor-not-allowed opacity-50 text-museum-stone-400'
             }
           `}
         >
           {isGameLoading ? (
             <span className="flex items-center space-x-2">
               <span className="animate-spin">⏳</span>
-              <span>Starting Game...</span>
+              <span>Entering Gallery...</span>
             </span>
           ) : (
-            'Start Game'
+            'Enter Museum'
           )}
         </button>
       </div>
 
       {/* How to Play */}
-      <div className="mt-12 p-6 bg-gray-800/50 rounded-xl">
-        <h3 className="text-xl font-bold mb-4 flex items-center space-x-2">
+      <div className="mt-12 p-6 bg-museum-stone-800/30 backdrop-blur-sm rounded-xl border border-museum-bronze-400/20">
+        <h3 className="text-xl font-bold mb-4 flex items-center space-x-2 text-museum-stone-900">
           <span>📖</span>
-          <span>How to Play</span>
+          <span>How to Build Your Museum</span>
         </h3>
-        <ul className="space-y-2 text-gray-300">
+        <ul className="space-y-2 text-museum-stone-700">
           <li className="flex items-start space-x-2">
-            <span className="text-blue-400">1.</span>
-            <span>Click on cards to flip them and reveal their values</span>
+            <span className="text-museum-blue-600 font-bold">1.</span>
+            <span>Click on artifacts to reveal their historical significance</span>
           </li>
           <li className="flex items-start space-x-2">
-            <span className="text-blue-400">2.</span>
-            <span>Find matching pairs by remembering card positions</span>
+            <span className="text-museum-blue-600 font-bold">2.</span>
+            <span>Find matching pairs from the same time period</span>
           </li>
           <li className="flex items-start space-x-2">
-            <span className="text-blue-400">3.</span>
-            <span>Match all pairs in the fewest moves to get a high score</span>
+            <span className="text-museum-blue-600 font-bold">3.</span>
+            <span>Collect all artifacts to complete your museum exhibition</span>
           </li>
           <li className="flex items-start space-x-2">
-            <span className="text-blue-400">4.</span>
-            <span>Compete on the leaderboard for the best scores!</span>
+            <span className="text-museum-blue-600 font-bold">4.</span>
+            <span>Compete for the Hall of Fame with the best collections!</span>
           </li>
         </ul>
       </div>

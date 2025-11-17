@@ -32,9 +32,9 @@ export default function WalletButton() {
     return (
       <button
         disabled
-        className="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg flex items-center space-x-2 cursor-not-allowed"
+        className="px-4 py-2 bg-museum-stone-700 text-museum-stone-300 rounded-lg flex items-center space-x-2 cursor-not-allowed"
       >
-        <div className="w-4 h-4 border-2 border-gray-300 border-t-transparent rounded-full animate-spin" />
+        <div className="w-4 h-4 border-2 border-museum-stone-300 border-t-transparent rounded-full animate-spin" />
         <span className="text-sm">Connecting...</span>
       </button>
     );
@@ -43,11 +43,11 @@ export default function WalletButton() {
   if (isWalletConnected && walletAddress) {
     return (
       <div className="flex items-center space-x-2">
-        <div className="px-4 py-2 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg flex items-center space-x-2">
-          <div className="w-2 h-2 bg-green-300 rounded-full animate-pulse" />
+        <div className="px-4 py-2 bg-gradient-to-r from-museum-bronze-600 to-museum-stone-600 rounded-lg flex items-center space-x-2">
+          <div className="w-2 h-2 bg-museum-bronze-300 rounded-full animate-pulse" />
           <div className="flex flex-col items-start">
             {walletUsername && (
-              <span className="text-xs text-green-100 font-medium">
+              <span className="text-xs text-museum-bronze-100 font-medium">
                 {walletUsername}
               </span>
             )}
@@ -59,7 +59,7 @@ export default function WalletButton() {
         
         <button
           onClick={handleDisconnect}
-          className="px-3 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors text-sm"
+          className="px-3 py-2 bg-museum-stone-700 hover:bg-museum-stone-600 text-white rounded-lg transition-colors text-sm"
           title="Disconnect Wallet"
         >
           ✕
@@ -71,10 +71,10 @@ export default function WalletButton() {
   return (
     <button
       onClick={handleConnect}
-      className="px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg flex items-center space-x-2 transition-all transform hover:scale-105"
+      className="px-4 py-2 bg-gradient-to-r from-museum-blue-600 to-museum-bronze-600 hover:from-museum-blue-700 hover:to-museum-bronze-700 text-white rounded-lg flex items-center space-x-2 transition-all transform hover:scale-105"
     >
-      <span className="text-lg">👛</span>
-      <span className="text-sm font-medium">Connect Wallet</span>
+      <span className="text-lg">🏛️</span>
+      <span className="text-sm font-medium">Enter Museum</span>
     </button>
   );
 }
