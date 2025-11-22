@@ -66,13 +66,12 @@ export function getTelegramUser(): TelegramUser {
     return user;
   }
   
-  // Mock user for development
-  console.log('🔧 Using mock Telegram user for development');
+  // Mock user for development - using real Telegram user info
+  console.log('🔧 Using Telegram user for development');
   return {
-    id: 123456789,
-    first_name: 'Test',
-    last_name: 'User',
-    username: 'testuser',
+    id: 452595366,
+    first_name: 'Dan🐾',
+    username: 'Mwihoti',
     language_code: 'en',
   };
 }

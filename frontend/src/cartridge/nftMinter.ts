@@ -42,12 +42,18 @@ export async function mintScoreNFT(params: NFTMintParams): Promise<NFTMintResult
       };
     }
 
-    // Validate recipient
+    // Validate and format recipient
     if (!params.recipient || params.recipient === '0x0') {
       return {
         success: false,
         error: 'Invalid recipient address',
       };
+    }
+
+    // Ensure recipient is properly formatted (0x prefixed hex string)
+    let formattedRecipient = params.recipient;
+    if (!formattedRecipient.startsWith('0x')) {
+      formattedRecipient = '0x' + formattedRecipient;
     }
 
     // Get account from Cartridge Controller
@@ -59,7 +65,13 @@ export async function mintScoreNFT(params: NFTMintParams): Promise<NFTMintResult
       };
     }
 
-    console.log('🎨 Minting NFT...', params);
+    console.log('🎨 Minting NFT...', {
+      recipient: formattedRecipient,
+      score: params.score,
+      timestamp: params.timestamp,
+      gameId: params.gameId,
+      difficulty: params.difficulty,
+    });
 
     // Create contract instance
     const contract = new Contract(
@@ -68,13 +80,13 @@ export async function mintScoreNFT(params: NFTMintParams): Promise<NFTMintResult
       account
     );
 
-    // Call mint_score_nft entrypoint
+    // Call mint_score_nft entrypoint with properly formatted parameters
     const result = await contract.mint_score_nft(
-      params.recipient,
-      params.score,
-      params.timestamp,
-      params.gameId,
-      params.difficulty
+      formattedRecipient,  // recipient as ContractAddress
+      params.score,        // score as u256
+      params.timestamp,    // timestamp as u64
+      params.gameId,       // game_id as u32
+      params.difficulty    // difficulty as u8
     );
 
     // Wait for transaction confirmation

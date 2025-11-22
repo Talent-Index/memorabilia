@@ -4,10 +4,11 @@ import WalletButton from './WalletButton';
 interface HeaderProps {
   onShowLeaderboard: () => void;
   onBackToDifficulty: () => void;
+  onShowDashboard: () => void;
   currentScreen: string;
 }
 
-export default function Header({ onShowLeaderboard, onBackToDifficulty, currentScreen }: HeaderProps) {
+export default function Header({ onShowLeaderboard, onBackToDifficulty, onShowDashboard, currentScreen }: HeaderProps) {
   const { telegramUser } = useGameStore();
   
   return (
@@ -46,6 +47,16 @@ export default function Header({ onShowLeaderboard, onBackToDifficulty, currentS
               >
                 <span>🏆</span>
                 <span>Hall of Fame</span>
+              </button>
+            )}
+
+            {currentScreen !== 'dashboard' && (
+              <button
+                onClick={onShowDashboard}
+                className="px-4 py-2 bg-museum-blue-600 hover:bg-museum-blue-700 rounded-lg text-sm font-medium text-white transition-colors flex items-center space-x-2 shadow-lg"
+              >
+                <span>📊</span>
+                <span>Dashboard</span>
               </button>
             )}
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useGameStore } from '../store/gameStore';
 import { LeaderboardEntry } from '../types';
+import { useLeaderboardQuery } from '../hooks/useUserQuery';
 
 interface LeaderboardProps {
   onBack: () => void;
@@ -9,45 +10,10 @@ interface LeaderboardProps {
 export default function Leaderboard({ onBack }: LeaderboardProps) {
   const { leaderboard } = useGameStore();
   const [filter, setFilter] = useState<'all' | 'easy' | 'medium' | 'hard'>('all');
+  const { topPlayers, loading, error, refetch } = useLeaderboardQuery(100);
 
-  // Mock leaderboard data for demo
-  const mockLeaderboard: LeaderboardEntry[] = [
-    {
-      rank: 1,
-      player: '0x123...abc',
-      telegram_id: '@alice',
-      score: 12500,
-      difficulty: 3,
-      moves: 25,
-      time: 180,
-      game_id: 1,
-      achieved_at: Date.now() - 86400000,
-    },
-    {
-      rank: 2,
-      player: '0x456...def',
-      telegram_id: '@bob',
-      score: 12200,
-      difficulty: 3,
-      moves: 27,
-      time: 195,
-      game_id: 2,
-      achieved_at: Date.now() - 172800000,
-    },
-    {
-      rank: 3,
-      player: '0x789...ghi',
-      telegram_id: '@charlie',
-      score: 11800,
-      difficulty: 2,
-      moves: 18,
-      time: 120,
-      game_id: 3,
-      achieved_at: Date.now() - 259200000,
-    },
-  ];
-
-  const displayLeaderboard = leaderboard.length > 0 ? leaderboard : mockLeaderboard;
+  // Use store leaderboard if available, otherwise use Torii query
+  const displayLeaderboard = leaderboard.length > 0 ? leaderboard : topPlayers;
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -89,32 +55,60 @@ export default function Leaderboard({ onBack }: LeaderboardProps) {
           <h2 className="text-4xl font-bold bg-gradient-to-r from-museum-gold-400 to-museum-bronze-500 bg-clip-text text-transparent mb-2">🏆 Hall of Fame</h2>
           <p className="text-museum-stone-400">Top collectors and their finest exhibitions</p>
         </div>
-        <button
-          onClick={onBack}
-          className="px-6 py-3 bg-museum-stone-700 hover:bg-museum-stone-600 rounded-xl font-medium transition-colors"
-        >
-          ← Back
-        </button>
+        <div className="flex items-center space-x-3">
+          <button
+            onClick={refetch}
+            disabled={loading}
+            className="px-4 py-2 bg-museum-blue-600 hover:bg-museum-blue-700 disabled:opacity-50 rounded-lg font-medium transition-colors"
+            title="Refresh leaderboard"
+          >
+            🔄 Refresh
+          </button>
+          <button
+            onClick={onBack}
+            className="px-6 py-3 bg-museum-stone-700 hover:bg-museum-stone-600 rounded-xl font-medium transition-colors"
+          >
+            ← Back
+          </button>
+        </div>
       </div>
 
-      {/* Filters */}
-      <div className="flex space-x-2 mb-6">
-        {['all', 'easy', 'medium', 'hard'].map((f) => (
-          <button
-            key={f}
-            onClick={() => setFilter(f as typeof filter)}
-            className={`
-              px-4 py-2 rounded-lg font-medium transition-colors capitalize
-              ${filter === f
-                ? 'bg-museum-blue-600 text-white'
-                : 'bg-museum-stone-700 text-museum-stone-300 hover:bg-museum-stone-600'
-              }
-            `}
-          >
-            {f === 'easy' ? 'Ancient' : f === 'medium' ? 'Medieval' : f === 'hard' ? 'Modern' : f}
-          </button>
-        ))}
-      </div>
+      {/* Error State */}
+      {error && (
+        <div className="mb-6 p-4 bg-red-900/20 border border-red-600/50 rounded-lg text-red-400">
+          ⚠️ Error loading leaderboard: {error}
+        </div>
+      )}
+
+      {/* Loading State */}
+      {loading && displayLeaderboard.length === 0 && (
+        <div className="text-center py-12">
+          <div className="text-4xl mb-4 animate-bounce">⏳</div>
+          <h3 className="text-2xl font-bold mb-2">Loading Leaderboard...</h3>
+          <p className="text-museum-stone-400">Fetching top players from the museum...</p>
+        </div>
+      )}
+
+      {/* Filters - only show when have data */}
+      {displayLeaderboard.length > 0 && (
+        <div className="flex space-x-2 mb-6">
+          {['all', 'easy', 'medium', 'hard'].map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f as typeof filter)}
+              className={`
+                px-4 py-2 rounded-lg font-medium transition-colors capitalize
+                ${filter === f
+                  ? 'bg-museum-blue-600 text-white'
+                  : 'bg-museum-stone-700 text-museum-stone-300 hover:bg-museum-stone-600'
+                }
+              `}
+            >
+              {f === 'easy' ? 'Ancient' : f === 'medium' ? 'Medieval' : f === 'hard' ? 'Modern' : f}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Leaderboard Table */}
       <div className="bg-museum-stone-800/50 backdrop-blur-lg rounded-2xl overflow-hidden border border-museum-bronze-400/20">

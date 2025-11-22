@@ -12,8 +12,10 @@ import WinModal from './components/WinModal';
 import Header from './components/Header';
 import Leaderboard from './components/Leaderboard';
 import TelegramRequired from './components/TelegramRequired';
+import UserDashboard from './components/UserDashboard';
+import Waves from './components/Waves';
 
-type Screen = 'loading' | 'difficulty' | 'game' | 'leaderboard';
+type Screen = 'loading' | 'difficulty' | 'game' | 'leaderboard' | 'dashboard';
 
 function App() {
   const [screen, setScreen] = useState<Screen>('loading');
@@ -103,6 +105,10 @@ function App() {
     setScreen('leaderboard');
   };
 
+  const handleShowDashboard = () => {
+    setScreen('dashboard');
+  };
+
   const handleBackToDifficulty = () => {
     if (currentGame) {
       // Show confirmation
@@ -128,12 +134,25 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-museum-blue-100 via-museum-blue-500 to-museum-blue-200 text-museum-stone-900">
-      <div className="absolute inset-0 bg-gradient-to-br from-museum-sand-50/30 to-museum-gold-50/20 pointer-events-none"></div>
+    <div className="min-h-screen bg-gradient-to-br from-museum-blue-100 via-museum-blue-500 to-museum-blue-200 text-[#F1FFE7] relative">
+      <Waves
+        lineColor="rgba(255, 255, 255, 0.2)"
+        backgroundColor="#32373B"
+        waveSpeedX={0.0125}
+        waveSpeedY={0.005}
+        waveAmpX={32}
+        waveAmpY={16}
+        xGap={10}
+        yGap={32}
+        friction={0.925}
+        tension={0.005}
+        maxCursorMove={100}
+      />
       <div className="relative z-10">
         <Header
           onShowLeaderboard={handleShowLeaderboard}
           onBackToDifficulty={handleBackToDifficulty}
+          onShowDashboard={handleShowDashboard}
           currentScreen={screen}
         />
 
@@ -148,6 +167,10 @@ function App() {
 
           {screen === 'leaderboard' && (
             <Leaderboard onBack={handleBackToDifficulty} />
+          )}
+
+          {screen === 'dashboard' && (
+            <UserDashboard />
           )}
         </main>
 

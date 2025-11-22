@@ -57,7 +57,7 @@ export default function DifficultySelector({ onStart }: DifficultySelectorProps)
         <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-museum-gold-500 to-museum-bronze-600 bg-clip-text text-transparent">
           Choose Your Time Period
         </h2>
-        <p className="text-museum-stone-700">Select an era to begin discovering artifacts</p>
+        <p className="text-[#FCFFF7]">Select an era to begin discovering artifacts</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -82,20 +82,20 @@ export default function DifficultySelector({ onStart }: DifficultySelectorProps)
               <div className="text-6xl mb-4">{diff.emoji}</div>
               
               {/* Name */}
-              <h3 className="text-2xl font-bold mb-2 text-museum-stone-900">{diff.name}</h3>
+              <h3 className="text-2xl font-bold mb-2 text-[#FCFFF7]">{diff.name}</h3>
               
               {/* Description */}
-              <p className="text-sm text-museum-stone-700 mb-4">{diff.description}</p>
+              <p className="text-sm text-[#FCFFF7] mb-4">{diff.description}</p>
               
               {/* Stats */}
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-museum-stone-600">Optimal Moves:</span>
-                  <span className="font-bold text-museum-stone-900">{config.optimalMoves}</span>
+                  <span className="text-[#FCFFF7]/80">Optimal Moves:</span>
+                  <span className="font-bold text-[#FCFFF7]">{config.optimalMoves}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-museum-stone-600">Era:</span>
-                  <span className="font-bold text-museum-stone-900">{diff.name}</span>
+                  <span className="text-[#FCFFF7]/80">Era:</span>
+                  <span className="font-bold text-[#FCFFF7]">{diff.name}</span>
                 </div>
               </div>
               
@@ -136,25 +136,25 @@ export default function DifficultySelector({ onStart }: DifficultySelectorProps)
 
       {/* How to Play */}
       <div className="mt-12 p-6 bg-museum-stone-800/30 backdrop-blur-sm rounded-xl border border-museum-bronze-400/20">
-        <h3 className="text-xl font-bold mb-4 flex items-center space-x-2 text-museum-stone-900">
+        <h3 className="text-xl font-bold mb-4 flex items-center space-x-2 text-[#FCFFF7]">
           <span>📖</span>
           <span>How to Build Your Museum</span>
         </h3>
-        <ul className="space-y-2 text-museum-stone-700">
+        <ul className="space-y-2 text-[#FCFFF7]">
           <li className="flex items-start space-x-2">
-            <span className="text-museum-blue-600 font-bold">1.</span>
+            <span className="text-museum-gold-400 font-bold">1.</span>
             <span>Click on artifacts to reveal their historical significance</span>
           </li>
           <li className="flex items-start space-x-2">
-            <span className="text-museum-blue-600 font-bold">2.</span>
+            <span className="text-museum-gold-400 font-bold">2.</span>
             <span>Find matching pairs from the same time period</span>
           </li>
           <li className="flex items-start space-x-2">
-            <span className="text-museum-blue-600 font-bold">3.</span>
+            <span className="text-museum-gold-400 font-bold">3.</span>
             <span>Collect all artifacts to complete your museum exhibition</span>
           </li>
           <li className="flex items-start space-x-2">
-            <span className="text-museum-blue-600 font-bold">4.</span>
+            <span className="text-museum-gold-400 font-bold">4.</span>
             <span>Compete for the Hall of Fame with the best collections!</span>
           </li>
         </ul>

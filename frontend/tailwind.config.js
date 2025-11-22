@@ -92,10 +92,10 @@ export default {
         }
       },
       animation: {
-        'flip': 'flip 0.6s ease-in-out',
-        'match': 'match 0.5s ease-in-out',
-        'shake': 'shake 0.5s ease-in-out',
-        'bounce-in': 'bounceIn 0.6s ease-out',
+        'flip': 'flip 0.25s ease-in-out',
+        'match': 'match 0.4s ease-in-out',
+        'shake': 'shake 0.3s ease-in-out',
+        'bounce-in': 'bounceIn 0.4s ease-out',
       },
       keyframes: {
         flip: {

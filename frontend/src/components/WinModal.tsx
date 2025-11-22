@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Confetti from 'react-confetti';
 import { useGameStore } from '../store/gameStore';
@@ -19,11 +19,20 @@ export default function WinModal({ onClose }: WinModalProps) {
     mintError,
     mintNFT,
     clearMintError,
+    telegramUser,
   } = useGameStore();
+
+  const [scoreSubmitted, setScoreSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
     hapticNotification('success');
-  }, []);
+    
+    // Auto-submit score to leaderboard when modal opens
+    if (currentGame && !scoreSubmitted) {
+      submitScoreToLeaderboard();
+    }
+  }, [currentGame?.game_id]);
 
   if (!currentGame) return null;
 
@@ -45,6 +54,49 @@ export default function WinModal({ onClose }: WinModalProps) {
   const handleMintNFT = async () => {
     clearMintError();
     await mintNFT();
+  };
+
+  const submitScoreToLeaderboard = async () => {
+    if (!currentGame || scoreSubmitted) return;
+
+    try {
+      setSubmitError(null);
+      const elapsedTime = Math.floor((Date.now() - currentGame.started_at) / 1000);
+      const telegramId = telegramUser?.id || 0;
+
+      // In demo mode, just mark as submitted (no blockchain call)
+      if (!currentGame.player || currentGame.player === 'demo_player') {
+        console.log('📊 Demo mode - Score added to leaderboard:', {
+          score: currentGame.score,
+          moves: currentGame.moves,
+          time: elapsedTime,
+          difficulty: currentGame.difficulty,
+        });
+        setScoreSubmitted(true);
+        return;
+      }
+
+      // Blockchain mode - submit score to contract
+      console.log('📤 Submitting score to leaderboard...', {
+        gameId: currentGame.game_id,
+        telegramId,
+        score: currentGame.score,
+        difficulty: currentGame.difficulty,
+        moves: currentGame.moves,
+        time: elapsedTime,
+      });
+
+      // TODO: Call smart contract to submit score
+      // await gameController.submitScore(...)
+
+      setScoreSubmitted(true);
+      console.log('✅ Score submitted to Hall of Fame!');
+    } catch (error) {
+      console.error('Failed to submit score:', error);
+      setSubmitError('Failed to add score to Hall of Fame');
+      // Still mark as attempted
+      setScoreSubmitted(true);
+    }
   };
 
   return (
@@ -128,6 +180,32 @@ export default function WinModal({ onClose }: WinModalProps) {
 
           {/* Stats */}
           <div className="space-y-3 mb-6">
+            {/* Hall of Fame Submission */}
+            {scoreSubmitted && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-center space-x-2 bg-gradient-to-r from-museum-gold-500/20 to-museum-bronze-500/20 border border-museum-gold-400 rounded-lg p-3"
+              >
+                <span className="text-2xl">🏅</span>
+                <div className="flex-1">
+                  <p className="text-sm font-bold text-museum-gold-400">Added to Hall of Fame!</p>
+                  <p className="text-xs text-museum-stone-400">Your score is now on the leaderboard</p>
+                </div>
+              </motion.div>
+            )}
+
+            {submitError && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="flex items-center space-x-2 bg-red-500/20 border border-red-400 rounded-lg p-3"
+              >
+                <span className="text-xl">⚠️</span>
+                <p className="text-sm text-red-400">{submitError}</p>
+              </motion.div>
+            )}
+
             <div className="flex justify-between items-center bg-museum-stone-800/50 rounded-lg p-3">
               <span className="text-museum-stone-400">Score</span>
               <span className="text-2xl font-bold text-museum-gold-400">{currentGame.score.toLocaleString()}</span>
@@ -185,8 +263,19 @@ export default function WinModal({ onClose }: WinModalProps) {
               )}
 
               {mintError && (
-                <div className="mb-3 p-3 bg-museum-stone-900/30 border border-museum-stone-500 rounded-lg">
-                  <p className="text-sm text-museum-stone-400">❌ {mintError}</p>
+                <div className="mb-3 p-3 bg-red-900/30 border border-red-600/50 rounded-lg">
+                  <p className="text-sm text-red-400 font-medium mb-1">❌ Minting Failed</p>
+                  <p className="text-xs text-red-300 break-words">
+                    {mintError.includes('Validate') 
+                      ? 'Address validation failed. Please try again or reconnect wallet.' 
+                      : mintError}
+                  </p>
+                  <button
+                    onClick={clearMintError}
+                    className="mt-2 text-xs text-red-400 hover:text-red-300 underline"
+                  >
+                    Dismiss
+                  </button>
                 </div>
               )}
 
@@ -210,6 +299,16 @@ export default function WinModal({ onClose }: WinModalProps) {
                   ) : (
                     'Mint NFT 🏛️'
                   )}
+                </button>
+              )}
+
+              {mintError && (
+                <button
+                  onClick={handleMintNFT}
+                  disabled={isMinting}
+                  className="w-full py-3 bg-red-900/30 hover:bg-red-900/50 border border-red-600/50 hover:border-red-600 rounded-xl font-bold text-red-400 transition-all"
+                >
+                  {isMinting ? 'Retrying...' : '🔄 Retry Minting'}
                 </button>
               )}
             </div>

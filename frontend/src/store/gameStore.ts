@@ -6,6 +6,7 @@ import { createDemoGame, checkCardsMatch, calculateScore, getEmojisForDifficulty
 import { playFlipSound, playMatchSound, playMismatchSound, playVictorySound } from '../utils/sounds';
 import { cartridgeController } from '../cartridge/CartridgeController';
 import { mintScoreNFT } from '../cartridge/nftMinter';
+import { addGameScore } from './playerStorage';
 
 interface GameStore {
   // User & Account
@@ -298,7 +299,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         if (newFlippedCards.length === 2) {
           setTimeout(() => {
             get().checkMatch();
-          }, 600);
+          }, 350);
         }
         return;
       }
@@ -313,7 +314,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       if (newFlippedCards.length === 2) {
         setTimeout(() => {
           get().checkMatch();
-        }, 500);
+        }, 350);
       }
     } catch (error) {
       console.error('Failed to flip card:', error);
@@ -386,6 +387,36 @@ export const useGameStore = create<GameStore>((set, get) => ({
           };
 
           set({ currentGame: finalGame });
+
+          // Save score to local storage
+          const { telegramUser } = get();
+          if (telegramUser) {
+            const elapsedTime = Math.floor((Date.now() - currentGame.started_at) / 1000);
+            const playerName = telegramUser.first_name || 'Anonymous Player';
+            
+            console.log('🎯 Game Completed - Saving Score:', {
+              telegramId: telegramUser.id,
+              playerName: playerName,
+              score: finalGame.score,
+              difficulty: finalGame.difficulty,
+              moves: finalGame.moves,
+              time: elapsedTime,
+            });
+            
+            addGameScore(
+              telegramUser.id,
+              playerName,
+              finalGame.score,
+              finalGame.difficulty,
+              finalGame.moves,
+              elapsedTime,
+              true // isWin
+            );
+            
+            console.log('✅ Score saved to player dashboard');
+          } else {
+            console.warn('⚠️ No telegram user found, score not saved');
+          }
 
           // Play victory sound
           setTimeout(() => {

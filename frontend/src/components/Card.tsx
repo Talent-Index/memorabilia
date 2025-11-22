@@ -28,7 +28,7 @@ export default function Card({ emoji, isFlipped, isMatched, onClick, disabled }:
           className="w-full h-full relative"
           initial={false}
           animate={{ rotateY: isFlipped || isMatched ? 180 : 0 }}
-          transition={{ duration: 0.4, ease: 'easeInOut' }}
+          transition={{ duration: 0.25, ease: 'easeInOut' }}
           style={{ transformStyle: 'preserve-3d' }}
         >
           {/* Card Back (Face Down) */}
@@ -93,7 +93,7 @@ export default function Card({ emoji, isFlipped, isMatched, onClick, disabled }:
                   scale: [1, 1.3, 1],
                   rotate: [0, 15, -15, 0]
                 } : {}}
-                transition={{ duration: 0.6 }}
+                transition={{ duration: 0.4 }}
               >
                 {emoji}
               </motion.div>
